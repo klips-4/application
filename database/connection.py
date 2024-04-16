@@ -9,7 +9,7 @@ class Connection:
         self.uniq_prod = []
         self.connection_to_db()
         self.choose_object()
-        self.choose_product()
+        # self.choose_product()
 
     def connection_to_db(self):
         with sqlite3.connect('database/database.db') as db:
@@ -26,9 +26,11 @@ class Connection:
                 self.uniq_obj.append(objects[2])
         return self.uniq_obj
 
-    def choose_product(self):
+    def choose_product(self, object):
         for product in self.res:
             if product[4] not in self.uniq_prod:
                 self.uniq_prod.append(product[4])
-
-        return self.uniq_prod
+        if object == "Резервуар":
+            return [self.uniq_prod[0], self.uniq_prod[1]]
+        elif object == "Трубопровод":
+            return [self.uniq_prod[1], self.uniq_prod[3]]
