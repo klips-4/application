@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from database.connection import Connection
+from database.connection import ConnectionObject
 
 
 class App(ctk.CTk):
@@ -29,20 +29,15 @@ class TopLabel(ctk.CTkFrame):
         self.product_from_db = []
         self.volume_from_db = []
 
-
     def select_object(self, selected_object):
         self.product_drop_down.configure(state="normal")
-        self.product_from_db = engine.choose_product(selected_object)
-        self.product_drop_down.configure(values=self.product_from_db)
-
-        return self.product_from_db
+        self.engine = ConnectionObject()
+        self.product_from_db = self.engine.connection_to_db(selected_object)
+        print(self.product_from_db)
 
     def select_product(self, selected_product):
         self.volume_drop_down.configure(state="normal")
-        self.volume_from_db = engine.choose_volume(selected_product)
         self.volume_drop_down.configure(values=self.volume_from_db)
-
-
 
     def init_top_widget(self):
         self.top_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -54,9 +49,8 @@ class TopLabel(ctk.CTkFrame):
         self.choose_object = ctk.CTkLabel(self.top_label, text="Выбрать объект:")
         self.choose_object.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
-        self.objects = object_from_db
-
-        self.object_drop_down = ctk.CTkComboBox(self.top_label, values=self.objects, command=self.select_object,)
+        self.object_drop_down = ctk.CTkComboBox(self.top_label, values=['Резервуар', 'Трубопровод'],
+                                                command=self.select_object)
         self.object_drop_down.grid(row=1, column=0, padx=10, pady=(10, 10), sticky="nsew")
 
         # Products
@@ -104,9 +98,6 @@ class BottomLabel(ctk.CTkFrame):
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
 
 
-# engine = Connection()
-# object_from_db = engine.choose_object()
-
-# if __name__ == "__main__":
-#     app = App()
-#     app.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

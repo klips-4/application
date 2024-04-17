@@ -1,6 +1,7 @@
 import sqlite3
 
 
+#
 # class Connection:
 #     res = []
 #
@@ -45,23 +46,24 @@ import sqlite3
 #         elif type_object == "Нефтепродукт":
 #             return [self.uniq_vol[3], self.uniq_vol[4], self.uniq_vol[5], self.uniq_vol[6], self.uniq_vol[7],
 #                     self.uniq_vol[8], self.uniq_vol[9]]
-
-
+#
+#
 class Connection:
     def connection_to_db(self):
         return
 
 
-class ConnWithObj(Connection):
+class ConnectionObject(Connection):
     def __init__(self):
         Connection.__init__(self)
         self.res = []
 
-    def connection_to_db(self):
-        with sqlite3.connect('database/database.db') as db:
+    def connection_to_db(self, type_object):
+        with sqlite3.connect('database/dataset.db') as db:
             cursor = db.cursor()
-            query = "SELECT * FROM Лист1"
-            cursor.execute(query)
+            params = (type_object,)
+            query = "SELECT * FROM dataset WHERE Type_of_object = ?;"
+            cursor.execute(query, params)
             self.res = cursor.fetchall()
 
         return self.res
