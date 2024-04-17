@@ -32,12 +32,11 @@ class TopLabel(ctk.CTkFrame):
     def select_object(self, selected_object):
         self.product_drop_down.configure(state="normal")
         self.engine = ConnectionObject()
-        self.product_from_db = self.engine.connection_to_db(selected_object)
-        print(self.product_from_db)
+        self.product_from_db = self.engine.get_uniq_products(selected_object)
+        self.product_drop_down.configure(values=self.product_from_db)
 
     def select_product(self, selected_product):
         self.volume_drop_down.configure(state="normal")
-        self.volume_drop_down.configure(values=self.volume_from_db)
 
     def init_top_widget(self):
         self.top_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -96,6 +95,7 @@ class BottomLabel(ctk.CTkFrame):
     def init_top_widget(self):
         self.bottom_label = ctk.CTkFrame(self, fg_color="aliceblue")
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
+
 
 
 if __name__ == "__main__":
