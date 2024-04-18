@@ -40,8 +40,6 @@ class ConnectionObject(Connection):
 
     def __init__(self):
         Connection.__init__(self)
-        self.res = []
-        self.uniq_prod = []
 
     def get_uniq_products(self, type_object):
         self.type_of_object = type_object
