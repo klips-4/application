@@ -29,14 +29,31 @@ class TopLabel(ctk.CTkFrame):
         self.product_from_db = []
         self.volume_from_db = []
 
+    def create_engine(self):
+        self.engine = ConnectionObject()
+
     def select_object(self, selected_object):
         self.product_drop_down.configure(state="normal")
-        self.engine = ConnectionObject()
+        self.create_engine()
         self.product_from_db = self.engine.get_uniq_products(selected_object)
         self.product_drop_down.configure(values=self.product_from_db)
 
     def select_product(self, selected_product):
         self.volume_drop_down.configure(state="normal")
+        self.current_object = self.object_drop_down.get()
+        self.create_engine()
+        self.volume_from_db = self.engine.get_uniq_volume(selected_product, self.current_object)
+        self.volume_drop_down.configure(values=self.volume_from_db)
+
+    def select_volume(self, selected_volume):
+        self.construction_drop_down.configure(state="normal")
+        self.current_object = self.object_drop_down.get()
+        self.create_engine()
+        self.method_from_db = self.engine.get_uniq_method_construction(selected_volume, self.current_object)
+        self.construction_drop_down.configure(values=self.method_from_db)
+
+    def select_method_construction(self, selected_method):
+        pass
 
     def init_top_widget(self):
         self.top_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -65,7 +82,7 @@ class TopLabel(ctk.CTkFrame):
         self.choose_value = ctk.CTkLabel(self.top_label, text="Диаметр труб-да/объем резервуара:")
         self.choose_value.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="nsew")
 
-        self.volume_drop_down = ctk.CTkComboBox(self.top_label, state='disabled')
+        self.volume_drop_down = ctk.CTkComboBox(self.top_label, state='disabled', command=self.select_volume)
         self.volume_drop_down.grid(row=1, column=2, padx=10, pady=(10, 10), sticky="nsew")
 
         # Construction
@@ -73,7 +90,8 @@ class TopLabel(ctk.CTkFrame):
         self.choose_construction = ctk.CTkLabel(self.top_label, text="Способ строительства:")
         self.choose_construction.grid(row=0, column=3, padx=10, pady=(10, 0), sticky="nsew")
 
-        self.construction_drop_down = ctk.CTkComboBox(self.top_label, state='disabled')
+        self.construction_drop_down = ctk.CTkComboBox(self.top_label, state='disabled',
+                                                      command=self.select_method_construction)
         self.construction_drop_down.grid(row=1, column=3, padx=10, pady=(10, 10), sticky="nsew")
 
         # Life_cycle
@@ -95,7 +113,6 @@ class BottomLabel(ctk.CTkFrame):
     def init_top_widget(self):
         self.bottom_label = ctk.CTkFrame(self, fg_color="aliceblue")
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
-
 
 
 if __name__ == "__main__":
