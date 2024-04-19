@@ -16,7 +16,7 @@ class Connection:
     def get_filtered_volume(self, product_value, object_value):
         with sqlite3.connect('database/dataset.db') as db:
             cursor = db.cursor()
-            params = (object_value, product_value, )
+            params = (object_value, product_value,)
             query = "SELECT DISTINCT Diameter_or_volume FROM dataset WHERE Type_of_object = ? AND Type_of_product = ?"
             cursor.execute(query, params)
             self.res = cursor.fetchall()
@@ -27,8 +27,19 @@ class Connection:
     def get_filtered_methods(self, product_value, object_value):
         with sqlite3.connect('database/dataset.db') as db:
             cursor = db.cursor()
-            params = (object_value, product_value, )
+            params = (object_value, product_value,)
             query = "SELECT DISTINCT Construction_method FROM dataset WHERE Type_of_object = ? AND Diameter_or_volume = ?"
+            cursor.execute(query, params)
+            self.res = cursor.fetchall()
+            self.result = [item[0] for item in self.res]
+
+        return self.result
+
+    def get_filtered_cycles(self, object_value, volume_value):
+        with sqlite3.connect('database/dataset.db') as db:
+            cursor = db.cursor()
+            params = (object_value, volume_value,)
+            query = "SELECT DISTINCT Stage_of_lifecycle FROM dataset WHERE Type_of_object = ? AND Diameter_or_volume = ?"
             cursor.execute(query, params)
             self.res = cursor.fetchall()
             self.result = [item[0] for item in self.res]
@@ -50,3 +61,6 @@ class ConnectionObject(Connection):
 
     def get_uniq_method_construction(self, product_value, object_value):
         return super().get_filtered_methods(product_value, object_value)
+
+    def get_uniq_life_cycles(self, object_value, volume_value):
+        return super().get_filtered_cycles(object_value, volume_value)

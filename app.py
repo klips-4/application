@@ -6,18 +6,21 @@ class App(ctk.CTk):
 
     def __init__(self):
         super().__init__()
-
         self.title("Application")
-        self.geometry(f"{1020}x{500}")
-        self.grid_columnconfigure((0, 0), weight=1)
-        self.grid_rowconfigure(1, weight=1, minsize=200)
+        self.geometry(f"{980}x{800}")
+        self.grid_columnconfigure((1, 1), weight=1)
+        self.grid_rowconfigure(2, weight=1, minsize=400)
         self.set_frames()
+
+
 
     def set_frames(self):
         self.top_label_frame = TopLabel(self)
         self.top_label_frame.grid(column=0, row=0, padx=10, pady=(10, 0), sticky="nsew")
+        self.middle_label_frame = MiddleLabel(self)
+        self.middle_label_frame.grid(column=0, row=1, padx=10, pady=(10, 0), sticky="nsew")
         self.bottom_label_frame = BottomLabel(self)
-        self.bottom_label_frame.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
+        self.bottom_label_frame.grid(column=0, row=2, padx=10, pady=(10, 10), sticky="nsew")
 
 
 class TopLabel(ctk.CTkFrame):
@@ -52,8 +55,13 @@ class TopLabel(ctk.CTkFrame):
         self.method_from_db = self.engine.get_uniq_method_construction(selected_volume, self.current_object)
         self.construction_drop_down.configure(values=self.method_from_db)
 
-    def select_method_construction(self, selected_method):
-        pass
+    def select_method_construction(self, selected_construction):
+        self.life_cycle_drop_down.configure(state="normal")
+        self.current_object = self.object_drop_down.get()
+        self.current_volume = self.volume_drop_down.get()
+        self.create_engine()
+        self.life_cycle_from_db = self.engine.get_uniq_life_cycles(self.current_object, self.current_volume)
+        self.life_cycle_drop_down.configure(values=self.life_cycle_from_db)
 
     def init_top_widget(self):
         self.top_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -106,13 +114,47 @@ class TopLabel(ctk.CTkFrame):
 class BottomLabel(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.init_top_widget()
+        self.init_bottom_widget()
         self.grid_columnconfigure((0, 0), weight=1)
         self.grid_rowconfigure(1, weight=1, minsize=200)
 
-    def init_top_widget(self):
+    def init_bottom_widget(self):
         self.bottom_label = ctk.CTkFrame(self, fg_color="aliceblue")
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
+
+
+class MiddleLabel(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.init_middle_widget()
+        self.grid_columnconfigure((0, 0), weight=1)
+        self.grid_rowconfigure(0, weight=1, minsize=10)
+        self.drop_down()
+
+    def init_middle_widget(self):
+        self.middle_label = ctk.CTkFrame(self, fg_color="aliceblue")
+        self.middle_label.grid(padx=10, pady=(10, 10), sticky="nsew")
+
+    def drop_down(self):
+        # Deviations
+        self.choose_deviation = ctk.CTkLabel(self.middle_label, text="Отступление от требований:")
+        self.choose_deviation.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
+
+        self.deviations_drop_down = ctk.CTkComboBox(self.middle_label, values=[''], command=self.select_deviations)
+        self.deviations_drop_down.grid(row=1, column=0, padx=10, pady=(10, 10), sticky="nsew")
+
+        # Deviations_object
+
+        self.choose_deviation_object = ctk.CTkLabel(self.middle_label,
+                                                    text="Объект, относительно которого происходит отступление:")
+        self.choose_deviation_object.grid(row=0, column=1, padx=50, pady=(10, 0), sticky="nsew")
+
+        self.deviation_object_drop_down = ctk.CTkComboBox(self.middle_label, state='disabled')
+        self.deviation_object_drop_down.grid(row=1, column=1, padx=10, pady=(10, 10), sticky="nsew")
+
+    def select_deviations(self, selected_product):
+        self.deviation_object_drop_down.configure(state="normal")
+
 
 
 if __name__ == "__main__":
