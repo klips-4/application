@@ -126,7 +126,8 @@ class BottomLabel(ctk.CTkFrame):
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
 
         self.text = ctk.CTkLabel(self.bottom_label, text="")
-        self.text.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nw")
+        # self.text.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nw")
+        self.text.pack()
 
 
 
@@ -175,7 +176,11 @@ class MiddleLabel(ctk.CTkFrame):
         self.current_deviation_object = self.deviation_object_drop_down.get()
         self.engine = ConnectionObject()
         self.event = self.engine.get_uniq_event(self.current_object, self.current_deviation_object)
-        self.master.bottom_label_frame.text.configure(text=self.event)
+        self.events = ''
+
+        for e in self.event:
+            self.events += e + ', ' + '\n'
+            self.master.bottom_label_frame.text.configure(text=self.events)
 
 
 
