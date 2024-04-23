@@ -134,9 +134,15 @@ class MiddleLabel(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1, minsize=10)
         self.drop_down()
 
+
+
+
     def init_middle_widget(self):
         self.middle_label = ctk.CTkFrame(self, fg_color="aliceblue")
         self.middle_label.grid(padx=10, pady=(10, 10), sticky="nsew")
+
+        self.button = ctk.CTkButton(self.middle_label, text="Выполнить", command=self.get_events)
+        self.button.grid(column=3, row=1, padx=10, pady=(10, 10), sticky="nsew")
 
     def drop_down(self):
         # Deviations
@@ -161,6 +167,14 @@ class MiddleLabel(ctk.CTkFrame):
         self.engine = ConnectionObject()
         self.deviation_object_from_db = self.engine.get_uniq_deviation_object(self.current_object, selected_deviation)
         self.deviation_object_drop_down.configure(values=self.deviation_object_from_db)
+
+
+    def get_events(self):
+        self.current_deviation_object = self.deviation_object_drop_down.get()
+        self.engine = ConnectionObject()
+        self.event = self.engine.get_uniq_event(self.current_object,  self.current_deviation_object)
+        print(self.event)
+
 
 
 
