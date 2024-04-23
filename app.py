@@ -127,7 +127,7 @@ class BottomLabel(ctk.CTkFrame):
 
         self.text = ctk.CTkLabel(self.bottom_label, text="")
         # self.text.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nw")
-        self.text.pack()
+        self.text.pack(ipadx=10, ipady=10)
 
 
 
@@ -179,7 +179,7 @@ class MiddleLabel(ctk.CTkFrame):
         self.events = ''
 
         for e in self.event:
-            self.events += e + ', ' + '\n'
+            self.events += e + '\n'
             self.master.bottom_label_frame.text.configure(text=self.events)
 
 
