@@ -7,9 +7,9 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Application")
-        self.geometry(f"{980}x{800}")
+        self.geometry(f"{980}x{525}")
         self.grid_columnconfigure((1, 1), weight=1)
-        self.grid_rowconfigure(2, weight=1, minsize=400)
+        self.grid_rowconfigure(2, weight=1, minsize=225)
         self.set_frames()
 
     def set_frames(self):
@@ -119,11 +119,16 @@ class BottomLabel(ctk.CTkFrame):
         super().__init__(master)
         self.init_bottom_widget()
         self.grid_columnconfigure((0, 0), weight=1)
-        self.grid_rowconfigure(1, weight=1, minsize=200)
+        self.grid_rowconfigure(1, weight=1, minsize=225)
 
     def init_bottom_widget(self):
-        self.bottom_label = ctk.CTkFrame(self, fg_color="aliceblue")
+        self.bottom_label = ctk.CTkFrame(self, fg_color="white")
         self.bottom_label.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nsew")
+
+        self.text = ctk.CTkLabel(self.bottom_label, text="")
+        self.text.grid(column=0, row=1, padx=10, pady=(10, 10), sticky="nw")
+
+
 
 
 class MiddleLabel(ctk.CTkFrame):
@@ -133,9 +138,7 @@ class MiddleLabel(ctk.CTkFrame):
         self.grid_columnconfigure((0, 0), weight=1)
         self.grid_rowconfigure(0, weight=1, minsize=10)
         self.drop_down()
-
-
-
+        self.event = None
 
     def init_middle_widget(self):
         self.middle_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -168,12 +171,11 @@ class MiddleLabel(ctk.CTkFrame):
         self.deviation_object_from_db = self.engine.get_uniq_deviation_object(self.current_object, selected_deviation)
         self.deviation_object_drop_down.configure(values=self.deviation_object_from_db)
 
-
     def get_events(self):
         self.current_deviation_object = self.deviation_object_drop_down.get()
         self.engine = ConnectionObject()
-        self.event = self.engine.get_uniq_event(self.current_object,  self.current_deviation_object)
-        print(self.event)
+        self.event = self.engine.get_uniq_event(self.current_object, self.current_deviation_object)
+        self.master.bottom_label_frame.text.configure(text=self.event)
 
 
 

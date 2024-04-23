@@ -82,7 +82,6 @@ class Connection:
         return self.result
 
 
-
 class ConnectionObject(Connection):
 
     def __init__(self):
@@ -104,9 +103,8 @@ class ConnectionObject(Connection):
     def get_uniq_deviations(self, object_value, volume_value):
         return super().get_filtered_deviations(object_value, volume_value)
 
-    def get_uniq_deviation_object(self,object_value, selected_deviation):
+    def get_uniq_deviation_object(self, object_value, selected_deviation):
         return super().get_filtered_deviation_object(object_value, selected_deviation)
 
     def get_uniq_event(self, *args):
         return super().get_filtered_event(*args)
-
