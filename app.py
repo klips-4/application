@@ -12,12 +12,10 @@ class App(ctk.CTk):
         self.grid_rowconfigure(2, weight=1, minsize=400)
         self.set_frames()
 
-
-
     def set_frames(self):
         self.top_label_frame = TopLabel(self)
         self.top_label_frame.grid(column=0, row=0, padx=10, pady=(10, 0), sticky="nsew")
-        self.middle_label_frame = MiddleLabel(self)
+        self.middle_label_frame = MiddleLabel(master=self)
         self.middle_label_frame.grid(column=0, row=1, padx=10, pady=(10, 0), sticky="nsew")
         self.bottom_label_frame = BottomLabel(self)
         self.bottom_label_frame.grid(column=0, row=2, padx=10, pady=(10, 10), sticky="nsew")
@@ -26,11 +24,13 @@ class App(ctk.CTk):
 class TopLabel(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+        self.life_cycle_from_db = None
         self.init_top_widget()
         self.drop_down()
         self.grid_columnconfigure((0, 0), weight=1)
         self.product_from_db = []
         self.volume_from_db = []
+        self.current_object = None
 
     def create_engine(self):
         self.engine = ConnectionObject()
@@ -62,6 +62,8 @@ class TopLabel(ctk.CTkFrame):
         self.create_engine()
         self.life_cycle_from_db = self.engine.get_uniq_life_cycles(self.current_object, self.current_volume)
         self.life_cycle_drop_down.configure(values=self.life_cycle_from_db)
+        self.deviations_from_db = self.engine.get_uniq_deviations(self.current_object, self.current_volume)
+        self.master.middle_label_frame.deviations_drop_down.configure(values=self.deviations_from_db)
 
     def init_top_widget(self):
         self.top_label = ctk.CTkFrame(self, fg_color="aliceblue")
@@ -75,6 +77,7 @@ class TopLabel(ctk.CTkFrame):
 
         self.object_drop_down = ctk.CTkComboBox(self.top_label, values=['Резервуар', 'Трубопровод'],
                                                 command=self.select_object)
+
         self.object_drop_down.grid(row=1, column=0, padx=10, pady=(10, 10), sticky="nsew")
 
         # Products
@@ -152,8 +155,12 @@ class MiddleLabel(ctk.CTkFrame):
         self.deviation_object_drop_down = ctk.CTkComboBox(self.middle_label, state='disabled')
         self.deviation_object_drop_down.grid(row=1, column=1, padx=10, pady=(10, 10), sticky="nsew")
 
-    def select_deviations(self, selected_product):
+    def select_deviations(self, selected_deviation):
         self.deviation_object_drop_down.configure(state="normal")
+        self.current_object = self.master.top_label_frame.object_drop_down.get()
+        self.engine = ConnectionObject()
+        self.deviation_object_from_db = self.engine.get_uniq_deviation_object(self.current_object, selected_deviation)
+        self.deviation_object_drop_down.configure(values=self.deviation_object_from_db)
 
 
 
