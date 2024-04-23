@@ -68,6 +68,20 @@ class Connection:
 
         return self.result
 
+    def get_filtered_event(self, *args):
+        object_value = args[0]
+        selected_deviation = args[1]
+        with sqlite3.connect('database/dataset.db') as db:
+            cursor = db.cursor()
+            params = (object_value, selected_deviation,)
+            query = "SELECT DISTINCT Events FROM dataset WHERE Type_of_object = ? AND Deviation_object = ?"
+            cursor.execute(query, params)
+            self.res = cursor.fetchall()
+            self.result = [item[0] for item in self.res]
+
+        return self.result
+
+
 
 class ConnectionObject(Connection):
 
@@ -92,4 +106,7 @@ class ConnectionObject(Connection):
 
     def get_uniq_deviation_object(self,object_value, selected_deviation):
         return super().get_filtered_deviation_object(object_value, selected_deviation)
+
+    def get_uniq_event(self, *args):
+        return super().get_filtered_event(*args)
 
