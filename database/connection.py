@@ -92,3 +92,4 @@ class ConnectionObject(Connection):
 
     def get_uniq_deviation_object(self,object_value, selected_deviation):
         return super().get_filtered_deviation_object(object_value, selected_deviation)
+
