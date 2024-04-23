@@ -46,6 +46,28 @@ class Connection:
 
         return self.result
 
+    def get_filtered_deviations(self, object_value, volume_value):
+        with sqlite3.connect('database/dataset.db') as db:
+            cursor = db.cursor()
+            params = (object_value, volume_value,)
+            query = "SELECT DISTINCT Deviation_from_norm FROM dataset WHERE Type_of_object = ? AND Diameter_or_volume = ?"
+            cursor.execute(query, params)
+            self.res = cursor.fetchall()
+            self.result = [item[0] for item in self.res]
+
+        return self.result
+
+    def get_filtered_deviation_object(self, object_value, selected_deviation):
+        with sqlite3.connect('database/dataset.db') as db:
+            cursor = db.cursor()
+            params = (object_value, selected_deviation,)
+            query = "SELECT DISTINCT Deviation_object FROM dataset WHERE Type_of_object = ? AND Deviation_from_norm = ?"
+            cursor.execute(query, params)
+            self.res = cursor.fetchall()
+            self.result = [item[0] for item in self.res]
+
+        return self.result
+
 
 class ConnectionObject(Connection):
 
@@ -64,3 +86,9 @@ class ConnectionObject(Connection):
 
     def get_uniq_life_cycles(self, object_value, volume_value):
         return super().get_filtered_cycles(object_value, volume_value)
+
+    def get_uniq_deviations(self, object_value, volume_value):
+        return super().get_filtered_deviations(object_value, volume_value)
+
+    def get_uniq_deviation_object(self,object_value, selected_deviation):
+        return super().get_filtered_deviation_object(object_value, selected_deviation)
